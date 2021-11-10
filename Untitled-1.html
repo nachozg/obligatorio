@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang=”es”>
+
+<head>
+    <meta charset=”UTF-8”>
+    <meta name=”viewport” content=”width=device-width, initial-scale=1”>
+    <link rel="stylesheet" href="styles/miEstilosObligatorio.css">
+    <title>obligatorio</title>
+</head>
+
+<body>
+    <div id="container">
+
+        <header id="header" class="headerApp">
+
+            <div id="cabezal" class="clearfix">
+                <img id="logo" src="https://p1.develotion.com/2021_08/truck.png" alt="logo">
+                <ul id="navPrincipal">
+                    <li>
+                        <input type="button" value="Ingresar" id="btnMenuLogin">
+                    </li>
+                    <li>
+                        <input type="button" value="Registrarse" id="btnMenuRegistroUsuario">
+                    </li>
+                    <li>
+                        <input type="button" value="Cerrar sesion" id="btnMenuCerrarSesion">
+                    </li>
+                </ul>
+
+
+
+            </div>
+        </header>
+        <hr>
+        <div class="interior" id="cuerpo_Interfaz">
+            <div id="loguearse">
+                <h2>Ingresar</h2><br>
+
+                <label for="ingresar_Usuario"> Usuario:</label>
+                <input type="name" id="ingresar_Usuario">
+                <br>
+                <label for="password_usuario">Contraseña:</label>
+                <input type="password" id="password_usuario">
+                <br><br>
+                <input type="button" value="Ingresar" id="seleccionar_Usuario_Interfaz">
+                <p id="comunicaion_Logueo"></p>
+            </div>
+
+            <hr>
+
+            <div id="registro_Empresa_o_Persona">
+                <h2>Registro</h2>
+                <label for="opciones_de_registro">Seleccione una opcion:</label><br>
+                <select name="opciones_registrarse" id="opciones_de_registro">
+                    <option value=""></option>
+                    <option value="opcion_Empresa">Empresa</option>
+                    <option value="opcion_Persona">Persona</option>
+                </select>
+                <input type="button" value="Seleccionar" id="tipo_de_Registro">
+                <p id="comunicador_Registro"></p>
+                
+            </div>
+            <!- Fnc6 - Registro en la aplicación - Persona / Empresa. -–>
+                <div id="div_Registro_Persona">
+                    <hr>
+                    <h2>Registro de Personas</h2>
+                    <label for="ingresar_documento_persona">Ingrese su documento</label>
+                    <input type="text" id="ingresar_documento_persona"><br><br>
+                    <label for="registro_persona_nombre">Ingrese su nombre</label>
+                    <input type="text" id="registro_persona_nombre"><br><br>
+                    <label for="registro_persona_apellido">Ingrese su apellido</label>
+                    <input type="text" id="registro_persona_apellido"><br><br>
+                    <label for="registro_persona_usuario">Ingrese su usuario</label>
+                    <input type="text" id="registro_persona_usuario"><br><br>
+                    <label for="password_persona_registro">Contraseña:</label>
+                    <input type="password" id="password_persona_registro"><br><br>
+                    <input type="button" value="Ingresar Datos" id="ingreso_datos_registroPERS">
+                    
+                </div>
+                <hr>
+                <div id="div_Registro_Empresa">
+
+                    <h2>Registro de Empresas</h2>
+                    <label for="ingresar_Rut_Empresa">Ingrese Rut</label>
+                    <input type="text" id="ingresar_Rut_Empresa"><br><br>
+                    <label for="registro_Razon_Social">Ingrese Razon social</label>
+                    <input type="text" id="registro_Razon_Social"><br><br>
+                    <label for="registro_Nombre_Fantasia">Ingrese Nombre de fantasia</label>
+                    <input type="text" id="registro_Nombre_Fantasia"><br><br>
+                    <label for="registro_Empresa_usuario">Ingrese su usuario</label>
+                    <input type="text" id="registro_Empresa_usuario"><br><br>
+                    <label for="password_Empresa_registro">Contraseña:</label>
+                    <input type="password" id="password_Empresa_registro"><br><br>
+                    <label for="vehiculo_Registro">Ingrese tipo de vehiculo</label>
+                    <select name="tipo_vehiculo" id="vehiculo_Registro">
+                      
+                    </select>
+                    <br><br>
+                    <input type="button" value="Ingresar Datos" id="ingreso_datos_registroEMP"><br><br>
+                    
+
+                </div>
+
+                <hr>
+                <div id="interfaz_Administrador">
+                    <h2>Administrador</h2>
+                    <p id="mostrar_Empresas">
+                        <h2>Gestión de usuarios</h2>
+                        <h3>Lista de Empresas</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Rut</th>
+                                    <th>Razon Social</th>
+                                    <th>Nombre</th>
+                                    <th>Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tablaUsuarios"></tbody>
+                        </table>
+                        <br>
+                        <br>
+                        <input type="button" value="Actualizar Lista" id="actualizar_Empresas_habilitadas">
+
+
+
+                    </p>
+                    <!-- Fnc2 - Habilitar y deshabilitar empresas - Administrador -->
+
+
+                    Fnc3 - Filtro empresas – Administrador.-->
+                    <form action="../../form-result.php" method="post" target="_blank">
+
+                        <p>
+
+                            Buscar empresa: <input type="search" name="busqueda_Empresa" size="4" maxlength="4">
+
+                            <input type="text" value="Buscar" id="buscador_de_empresas">
+
+                        </p>
+
+                    </form>
+
+                    <!-- Fnc4 - Crear tipo de vehículos – Administrador.-->
+                    <h4>Tipo de Vehiculos</h4>
+                    <p ><ol id="mostrar_vehiculos"></ol></p>
+                   
+                    <input type="text" id="agregar_tipo_vehiculo" placeholder="agregar tipo de vehiculo">
+                    <button id="agregar_vehiculo" aria-placeholder="agregar vehiculo"></button>
+                    <!--.Fnc5 - Visualizar estadísticas sobre kilómetros recorridos según empresa- Administrador. -->
+                    <br>
+                    <hr>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Empresa</th>
+                                <th>Distancia</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla_Envios_Finalizados"></tbody>
+                    </table>
+
+                </div>
+                <p id="resultado_km_empresas"></p>
+        </div>
+    </div>
+    <!-- - hasta aca las funcionalidades de usuario administrador -->
+
+    <hr>
+    <div id="interfaz_Persona">
+        <!-Fnc7 - Realización de solicitud de envío – Persona. ––>
+            <h2>Persona</h2>
+            <label for="vehiculo">Seleccione el vehiculo de entrega </label>
+            <select id="select_vehiculos" name="vehiculo">
+                
+            </select>
+            <br>
+            <label for="ingresar_km">Ingrese cantidad de km</label>
+            <input type="number" id="ingresar_km"><br>
+            <p> <textarea name="comentario" id="agregar_foto" placeholder="arrastre su foto hasta aqui"></textarea></p>
+            <input type="button" id="cargar_Envio" value="Enviar"><br>
+            <p id="respuesta_envio"></p>
+
+            <!--Fnc8 - Visualización del listado de envíos - Persona -->
+
+            <br>
+            <hr>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Foto</th>
+                        <th>Estado</th>
+                        <th>Empresa</th>
+                    
+                    </tr>
+                </thead>
+                <tbody id="tabla_Envios_Persona"></tbody>
+            </table>
+
+            <!--Fnc9 - Visualizar estadísticas de solicitudes de envíos "En tránsito" o "Finalizada" Persona -->
+            <p id="porcentaje_envios_asignados"> </p>
+            <p id="estados_envios_existentes"> </p>
+
+    </div>
+    <hr>
+    <!--Fnc10 - Visualización del listado que contenga las solicitudes de envío "Pendientes" Empresa -->
+    <div id="interfaz_Empresa">
+        <h2>Empresa</h2>
+        <h5>Listado de pedidos pendientes</h5>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Apellido</th>
+                        <th>Distancia</th>
+                        <th>Foto</th>
+                        <th>Estado</th>
+                        <th>Asignar</th>
+                    </tr>
+                </thead>
+                <tbody id="tabla_Envios_Pendientes"></tbody>
+            </table>
+            <br>
+        
+
+        <!-- Fnc11 - Solicitudes "En tránsito" señalarlas como "Finalizadas" - Empresa -->
+<h5>Listado de pedidos en transito</h5>
+
+<table>
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>Distancia</th>
+            <th>Foto</th>
+            <th>Estado</th>
+            <th>Finalizar</th>
+        </tr>
+    </thead>
+    <tbody id="tabla_Envios_En_Transito"></tbody>
+</table>
+<br>
+<br>
+            <p id="cantidad_envios"> </p>
+        </div>
+    </div>
+    </div>
+    </div>
+    <script type="text/javascript" src="js/envios.js"></script>
+    <script type="text/javascript" src="js/vehiculosId.js"></script>
+    <script type="text/javascript" src="js/clases.js"></script>
+    <script type="text/javascript" src="js/micodigoObligatorio.js"></script>
+</body>
+
+
+</html>
