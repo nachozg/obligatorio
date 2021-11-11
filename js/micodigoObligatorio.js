@@ -1,3 +1,4 @@
+
 let usuarios = [];
 let vehiculos = [];
 let subirEmpresas = [];
@@ -38,6 +39,7 @@ function precargarDatos() {
     subirEnvios("guille", "Camion", 450, "", "Pendiente", "", "guilen", "zugarra");
     subirEnvios("galuchi", "Camioneta", 150, "", "En tránsito", "wanderers", "gala", "zugarra");
     subirEnvios("manuela", "Moto", 20, "", "Finalizado", "huracanbuceo", "manuela", "cabrera");
+  //  SubirEnviosFinalizados("manuela", "Moto", 20, "", "Finalizado", "huracanbuceo", "manuela", "cabrera");
     subirEmpresasalArray()
     console.log(usuarios)
     console.log(vehiculos)
@@ -72,6 +74,11 @@ function subirVehiculos(vehiculo) {
 function subirEnvios(usuario, vehiculo, distancia, foto, estado, empresa, nombre, apellido) {
     let envio = new Envios(usuario, vehiculo, distancia, foto, estado, empresa, nombre, apellido);
     envios.push(envio)
+}
+// subir envios finalizados precarga
+function SubirEnviosFinalizados(usuario, vehiculo, distancia, foto, estado, empresa, nombre, apellido) {
+    let envio = new Envios(usuario, vehiculo, distancia, foto, estado, empresa, nombre, apellido);
+    enviosFinalizados.push(envio)
 }
 //funcion para mostrarvehiculos
 function mostrarVehiculos() {
@@ -159,7 +166,7 @@ function logueo() {
         mostrarEnviosPersona()
 
     } else if (validarIngreso == "opcion_Empresa" && comprobacionEstadoEmpresa == true) {
-        mostrarKMporEmpresa();
+
         mostrarEnviosPendientes();
         document.querySelector("#interfaz_Empresa").style.display = "";
         document.querySelector("#loguearse").style.display = "none";
@@ -179,16 +186,42 @@ function logueo() {
 
 
 }
-//funcion para calcular km por empresa
-function calcularKMxEmpresa(empresa){
-return kilometrosEmp
+//funcion para encontrar empresas
+function encontrarEmpresas() {
+    let nombres = []
+    for (let i = 0; i < usuarios.length; i++) {
+        let reciboArray = usuarios[i];
+        let reciboNombre = reciboArray.usuario;
+        let reciboTipo = reciboArray.tipoUsuario;
+        if (reciboTipo == "opcion_Empresa") {
+            nombres.push(reciboNombre)
+        }
+
+
+    }
+    return nombres
 }
-// cambio git
+
+//funcion para calcular km por empresa
+function calcularKMxEmpresa(empresa) {
+    let kilometrosEmp = 0;
+    for (let i = 0; i < usuarios.length; i++) {
+        let reciboUsuarios = usuarios[i];
+        let reciboTipoUsuario = reciboUsuarios.tipoUsuario;
+        let reciboUsuario = reciboUsuarios.usuario
+        if (empresa == reciboUsuario && reciboTipoUsuario == "opcion_Empresa") {
+
+        }
+
+    }
+    return kilometrosEmp
+}
+
 // funcion para mostrar KM recorrido de una empresa
 function mostrarKMporEmpresa() {
 
     let tablaEnviosFinalizados = ``;
-    
+
 
 
     for (let i = 0; i < envios.length; i++) {
@@ -196,39 +229,60 @@ function mostrarKMporEmpresa() {
         let envioRecibido = envios[i];
         let reciboEmpresa = envioRecibido.empresa;
         let estadoRecibido = envioRecibido.estado;
-        let cuentakm = 0;
-        let empresaFinalizo = ``;
-        if (estadoRecibido == "Finalizado") {
+        let reciboId = envioRecibido.id;
+
+        let buscoPedidoFinalizado = encontrarPedidofinalizado(reciboId);
+        console.log(buscoPedidoFinalizado)
+        if (estadoRecibido == "Finalizado" && buscoPedidoFinalizado == false) {
             enviosFinalizados.push(envioRecibido)
+            console.log(enviosFinalizados)
         }
-     // let  cuentadistancia =  mostrarEmpresaykms(reciboEmpresa)
+    }
+    let empresas = encontrarEmpresas();
+    for (let i = 0; i < empresas.length; i++) {
+        let reciboEmpresaNombre = empresas[i];
+        let cuentakm = 0;
+
         for (let j = 0; j < enviosFinalizados.length; j++) {
 
             let reciboFinalizados = enviosFinalizados[j];
             empresaFinalizo = reciboFinalizados.empresa;
             let kmRecorrido = reciboFinalizados.distancia;
-            if (empresaFinalizo == reciboEmpresa) {
+            if (empresaFinalizo == reciboEmpresaNombre) {
                 cuentakm += kmRecorrido
             }
 
-
         }
 
-
-        if (estadoRecibido == "Finalizado" && empresaFinalizo == reciboEmpresa) {
-            tablaEnviosFinalizados += `<tr><td>${reciboEmpresa}</td><td>${cuentakm}</td>
+        tablaEnviosFinalizados += `<tr><td>${reciboEmpresaNombre}</td><td>${cuentakm}</td>
                     </tr>`;
-        }
-
     }
 
     document.querySelector("#tabla_Envios_Finalizados").innerHTML = tablaEnviosFinalizados;
     console.log(tablaEnviosFinalizados)
 }
-// funcion que recibe empresa y devuelve km recorridos
-function mostrarEmpresaykms(empresa){
+// funcion para encontrar un pedido finalizado
+function encontrarPedidofinalizado(id) {
+    let encontrado = false;
+    let pedidobuscado = false;
+    let i = 0;
+    while (!encontrado && i < enviosFinalizados.length) {
+        console.log("entre al while ")
+        let reciboEnvios = enviosFinalizados[i];
+        
+        let reciboID = reciboEnvios.id;
+        console.log(id)
+        console.log(reciboID)
+        if (reciboID == id){
+            encontrado = true;
+            pedidobuscado = true;
+        }
 
+        i++
+    }
+    return pedidobuscado
 }
+
 //funcion para ver el estado habilitado o no de la empresa
 function empresaEstado(empresa) {
     let estado = false;
@@ -278,11 +332,6 @@ function opcionPaginasRegistro() {
     comboVehiculosRegistro()
 }
 
-
-
-//function mostrarPantallas() {
-//ocultarPantallas();
-//}
 
 // funcion boton loguearse
 function botonLoguearse() {
@@ -499,7 +548,7 @@ function obtenerUsuarioPorUsuario(usuario) {
     let i = 0;
     while (!usuarioEncontrado && i < usuarios.length) {
         let usuarioGuardado = usuarios[i];
-        if (usuario === usuarioGuardado.usuario) {
+        if (usuario == usuarioGuardado.usuario) {
             usuarioEncontrado = usuarioGuardado;
         }
         i++;
@@ -589,6 +638,7 @@ function mostrarEnviosPendientes() {
     console.log(obtenerVehiculoUsuarioEmpresa)
     for (let i = 0; i < envios.length; i++) {
         let reciboEnvios = envios[i];
+        let empresaDelEnvio = reciboEnvios.empresa;
         let reciboNombre = reciboEnvios.nombre;
         console.log(reciboNombre)
         let reciboApellido = reciboEnvios.apellido
@@ -609,7 +659,7 @@ function mostrarEnviosPendientes() {
                              <td><input estadoPedido="${id}" class="btnCambiarEstadoPedido" type="button" value="${letraParaBotonEstado}"></td>
                         </tr>`;
 
-        } else if (vehiculo == obtenerVehiculoUsuarioEmpresa && reciboEstado == "En transito") {
+        } else if (vehiculo == obtenerVehiculoUsuarioEmpresa && reciboEstado == "En transito" && usuario == empresaDelEnvio) {
             mostrarTablaPedidosEnTransito += `<tr><td>${reciboNombre}</td>
             <td>${reciboApellido}</td>
            <td>${distancia}</td>
