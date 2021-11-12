@@ -1,4 +1,3 @@
-
 let usuarios = [];
 let vehiculos = [];
 let subirEmpresas = [];
@@ -18,7 +17,8 @@ function Inicializar() {
     eventosclickInterfazAdministrador();
     actualizarTablaDeUsuarios();
     eventosclickInterfazPersona();
-    // mostrarPantallas();
+    mostrarKMporEmpresa();
+    personaMasEnviosRealizados();
 
 }
 // funcion para precargar datos
@@ -39,8 +39,8 @@ function precargarDatos() {
     subirEnvios("guille", "Camion", 450, "", "Pendiente", "", "guilen", "zugarra");
     subirEnvios("galuchi", "Camioneta", 150, "", "En tránsito", "wanderers", "gala", "zugarra");
     subirEnvios("manuela", "Moto", 20, "", "Finalizado", "huracanbuceo", "manuela", "cabrera");
-  //  SubirEnviosFinalizados("manuela", "Moto", 20, "", "Finalizado", "huracanbuceo", "manuela", "cabrera");
-    subirEmpresasalArray()
+
+
     console.log(usuarios)
     console.log(vehiculos)
     console.log(envios)
@@ -75,11 +75,7 @@ function subirEnvios(usuario, vehiculo, distancia, foto, estado, empresa, nombre
     let envio = new Envios(usuario, vehiculo, distancia, foto, estado, empresa, nombre, apellido);
     envios.push(envio)
 }
-// subir envios finalizados precarga
-function SubirEnviosFinalizados(usuario, vehiculo, distancia, foto, estado, empresa, nombre, apellido) {
-    let envio = new Envios(usuario, vehiculo, distancia, foto, estado, empresa, nombre, apellido);
-    enviosFinalizados.push(envio)
-}
+
 //funcion para mostrarvehiculos
 function mostrarVehiculos() {
     let mostrarParrafo = ``;
@@ -108,17 +104,7 @@ function comboVehiculosRegistro() {
 }
 
 
-//funcion para subir empresas al array subirEmpresas
-function subirEmpresasalArray() {
-    for (let i = 0; i < usuarios.length; i++) {
-        let reciboUsuarios = usuarios[i];
-        let reciboTipoUsuario = reciboUsuarios.tipoUsuario;
-        if (reciboTipoUsuario == "opcion_Empresa") {
-            subirEmpresas.push(reciboUsuarios);
-        }
-    }
-    console.log(subirEmpresas)
-}
+
 // funcion para los eventos de click en el header (menu principal)
 function agregarEventosDeClick() {
     document.querySelector("#btnMenuLogin").addEventListener("click", botonLoguearse);
@@ -137,6 +123,7 @@ function botonCerrarSesion() {
     document.querySelector("#interfaz_Persona").style.display = "none";
     document.querySelector("#interfaz_Empresa").style.display = "none";
     document.querySelector("#ingresar_Usuario").value = "";
+    document.querySelector("#comunicaion_Logueo").value = "";
 }
 //funcion para los eventos de click en la pagina de registro
 function eventosClickRegistro() {
@@ -152,6 +139,7 @@ function eventosClickIngresar() {
 }
 //funcion para loguearse
 function logueo() {
+   
     let usuario = document.querySelector("#ingresar_Usuario").value.trim();
     usuario = usuario.toLowerCase()
     let contrasenia = document.querySelector("#password_usuario").value;
@@ -166,8 +154,9 @@ function logueo() {
         mostrarEnviosPersona()
 
     } else if (validarIngreso == "opcion_Empresa" && comprobacionEstadoEmpresa == true) {
-
+        mostrarKMporEmpresa()
         mostrarEnviosPendientes();
+        personaMasEnviosRealizados()
         document.querySelector("#interfaz_Empresa").style.display = "";
         document.querySelector("#loguearse").style.display = "none";
         // document.querySelector("#ingresar_Usuario").value = "";
@@ -269,11 +258,11 @@ function encontrarPedidofinalizado(id) {
     while (!encontrado && i < enviosFinalizados.length) {
         console.log("entre al while ")
         let reciboEnvios = enviosFinalizados[i];
-        
+
         let reciboID = reciboEnvios.id;
         console.log(id)
         console.log(reciboID)
-        if (reciboID == id){
+        if (reciboID == id) {
             encontrado = true;
             pedidobuscado = true;
         }
@@ -714,11 +703,13 @@ function mostrarEnviosPersona() {
 }
 
 // funcion eventos de click cambiar de en transito a finalizado
-function btnFUNCCambiarEstadoPedidoTransito() {
+function btnFUNCCambiarEstadoPedidoTransito() { 
+     
     let cambiarEstado = this.getAttribute("estadoPedidoFinalizar");
     let obtengoEnvioParaCambiar = obtenerPedido(cambiarEstado);
     let envioenTransito = finalizarPedidoYA(obtengoEnvioParaCambiar);
     cambiarEstadoFinalizar(envioenTransito)
+    
 }
 // funcion para cambiar texto boton estado
 function cambiarTextoBtnEstado(reciboEstado) {
@@ -738,7 +729,7 @@ function btnFUNCCambiarEstadoPedido() {
     let asignarsePedido = this.getAttribute("estadoPedido"); // saber que boton clickea
     let obtengoEnvioParaCambiar = obtenerPedido(asignarsePedido); //obtener el pedido
     let envioenTransito = finalizarPedidoYA(obtengoEnvioParaCambiar);
-
+    personaMasEnviosRealizados()
     // mostrarEnviosEnTransitoTomados();
 
     mostrarEnviosPendientes(); // actualizo la tabla de pedidos
@@ -753,9 +744,11 @@ function finalizarPedidoYA(elenvio) {
 
     } else if (envioEstado == "En Transito") {
         elenvio.estado = "Finalizado";
+        
+    
     }
     mostrarEnviosPendientes()
-
+    
     console.log(envios)
     return elenvio
 }
@@ -765,7 +758,8 @@ function cambiarEstadoFinalizar(elenvio) {
     if (envioEstado == "En transito") {
         elenvio.estado = "Finalizado";
         elenvio.empresa = document.querySelector("#ingresar_Usuario").value.trim().toLowerCase();
-
+       
+        
     }
     mostrarEnviosPendientes()
     console.log(envios)
@@ -780,9 +774,8 @@ function obtenerPedido(idPedido) {
         let idEnvio = reciboEnvio.id;
         let estadoEnvio = reciboEnvio.estado
         if (idEnvio == idPedido) {
-            matcheo = true
-            //  estadoEnvio = "En transito";
-            // console.log(estadoEnvio)
+            matcheo = true;
+
         }
         i++
     }
@@ -806,4 +799,130 @@ function obtenerVehiculoEmpresa(usuario) {
         i++
     }
     return reciboVehiculo
+}
+// funcion para estadisticas Interfaz empresa
+function personaMasEnviosRealizados() {
+    let usuario = document.querySelector("#ingresar_Usuario").value.trim().toLowerCase();
+    
+    let pedidosDEempresa = pedidosFinalizadosxEMP(usuario);
+    
+    let personas = encontrarRemitentes(pedidosDEempresa);
+    
+    let mejorCliente = encontrarMejorCliente(usuario, pedidosDEempresa, personas);
+    
+    document.querySelector("#cantidad_envios").innerHTML = "el mejor cliente es " + mejorCliente
+
+}
+//function para mostrar contenido de array
+function mostrarContenidoDeArray(arrayParaMostrar, idElementoHTML, separador, caracterFinal, borrarResultadoActual) {
+    let resultado = "";
+
+    if (arrayParaMostrar.length == 0) {
+        resultado = "El array está vacío."
+    } else {
+        for (let i = 0; i < arrayParaMostrar.length; i++) {
+            let elementoActual = arrayParaMostrar[i];
+            resultado += elementoActual;
+
+
+            if (i < arrayParaMostrar.length - 1) {
+                resultado += separador;
+            } else {
+                resultado += caracterFinal;
+            }
+        }
+    }
+
+    if (borrarResultadoActual) {
+        document.querySelector(`#${idElementoHTML}`).innerHTML = resultado;
+    } else {
+        document.querySelector(`#${idElementoHTML}`).innerHTML += "<br>" + resultado;
+    }
+}
+// funcion para encontrar el usuario que mas pedidios se le realizo por la empresa
+
+function encontrarMejorCliente(empresa, pedidos, clientes) {
+
+    let clienteMasPedidos = []; //array para recibir cliente con mas pedidos
+    let mayorNumPedidos = 0;
+    for (let i = 0; i < clientes.length; i++) { // recorro array clientes
+        let cantidadPedidos = 0; // cuenta pedidos
+
+        console.log(mayorNumPedidos)
+        let reciboCliente = clientes[i]; // recibo cliente
+
+        for (let i = 0; i < pedidos.length; i++) { // recorro array pedidos
+
+            let reciboPedidos = pedidos[i]; // recibo pedidos
+            let reciboPersona = reciboPedidos.usuario; // recibo usuario del pedidos
+            if (reciboPersona == reciboCliente) { // si son iguales cliente y persona que hace pedidos
+                cantidadPedidos++
+                console.log(cantidadPedidos)
+            }
+
+        }
+        if (cantidadPedidos == mayorNumPedidos && leerArrayNumPedidos(clienteMasPedidos, reciboCliente) == false) {
+            clienteMasPedidos.push(reciboCliente);
+
+
+        } else if (cantidadPedidos > mayorNumPedidos) {
+            clienteMasPedidos = []
+            mayorNumPedidos = cantidadPedidos
+            clienteMasPedidos.push(reciboCliente)
+        }
+
+    }
+    console.log(clienteMasPedidos)
+    return clienteMasPedidos // retorno cliente con mas pedidos 
+}
+// funcion para leer array pedidos
+function leerArrayNumPedidos(arrayClientes, cliente) {
+    let resultado = false;
+    let matcheo = false;
+    let i = 0;
+    console.log(matcheo)
+    console.log(cliente)
+    console.log(arrayClientes)
+    while (!matcheo && arrayClientes.length >= i) {
+        let reciboArray = arrayClientes[i];
+        if (reciboArray == cliente) {
+            matcheo = true;
+            resultado = true
+        }
+
+        i++;
+
+    } 
+    console.log(resultado)
+    return resultado
+}
+// funcion para encontrar pedidos por empresa
+function pedidosFinalizadosxEMP(usuario) {
+
+    let enviosEmpresa = [];
+    for (let i = 0; i < enviosFinalizados.length; i++) {
+        let reciboEnvios = enviosFinalizados[i];
+        let reciboEmpresa = reciboEnvios.empresa;
+        console.log(reciboEmpresa)
+        console.log(usuario)
+        if (usuario == reciboEmpresa) {
+            enviosEmpresa.push(reciboEnvios);
+        }
+
+
+    }
+    console.log(enviosEmpresa)
+    return enviosEmpresa
+}
+// funcion encontrar remitentes de pedidos realizados
+function encontrarRemitentes(pedidos) {
+    let remitentes = [];
+    for (let i = 0; i < pedidos.length; i++) {
+        let reciboPedidos = pedidos[i];
+        let reciboUsuario = reciboPedidos.usuario;
+        remitentes.push(reciboUsuario);
+
+    }
+
+    return remitentes
 }
