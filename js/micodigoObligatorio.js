@@ -19,7 +19,7 @@ function Inicializar() {
     eventosclickInterfazPersona();
     mostrarKMporEmpresa();
     personaMasEnviosRealizados();
-
+    mostrarEnviosPendientes();
 }
 // funcion para precargar datos
 function precargarDatos() {
@@ -37,13 +37,9 @@ function precargarDatos() {
     subirVehiculos("Camioneta");
     subirVehiculos("Moto");
     subirEnvios("guille", "Camion", 450, "", "Pendiente", "", "guilen", "zugarra");
-    subirEnvios("galuchi", "Camioneta", 150, "", "En tránsito", "wanderers", "gala", "zugarra");
+    subirEnvios("galuchi", "Camioneta", 150, "", "En transito", "wanderers", "gala", "zugarra");
     subirEnvios("manuela", "Moto", 20, "", "Finalizado", "huracanbuceo", "manuela", "cabrera");
 
-
-    console.log(usuarios)
-    console.log(vehiculos)
-    console.log(envios)
 }
 // funcion para ocultar pantallas
 function ocultarPantallas() {
@@ -135,11 +131,14 @@ function eventosClickRegistro() {
 // funcion para eventos de click en ingresar
 function eventosClickIngresar() {
     document.querySelector("#seleccionar_Usuario_Interfaz").addEventListener("click", logueo);
+    document.querySelector("#mostrar_estadisticas").addEventListener("click", muestroEstadisticasEmpresa);
 
 }
 //funcion para loguearse
 function logueo() {
-   
+    mostrarEnviosPendientes();
+    mostrarKMporEmpresa();
+    personaMasEnviosRealizados();
     let usuario = document.querySelector("#ingresar_Usuario").value.trim();
     usuario = usuario.toLowerCase()
     let contrasenia = document.querySelector("#password_usuario").value;
@@ -154,9 +153,9 @@ function logueo() {
         mostrarEnviosPersona()
 
     } else if (validarIngreso == "opcion_Empresa" && comprobacionEstadoEmpresa == true) {
-        mostrarKMporEmpresa()
+        mostrarKMporEmpresa();
         mostrarEnviosPendientes();
-        personaMasEnviosRealizados()
+        personaMasEnviosRealizados();
         document.querySelector("#interfaz_Empresa").style.display = "";
         document.querySelector("#loguearse").style.display = "none";
         // document.querySelector("#ingresar_Usuario").value = "";
@@ -365,7 +364,7 @@ function registroPersonas() {
     let tipoUsuario = document.querySelector("#opciones_de_registro").value;
     let usuarioValido = validarUsuario(usuario); // si devuelve true pusheo todo
     let contraseniaValidada = validarContrasenia(contraseña);
-    if (usuarioValido == false && contraseniaValidada == true && contraseña.length > 5) {
+    if (usuarioValido == false && contraseniaValidada == true && contraseña.length > 5 && documento != "" && nombre != "" && apellido != "") {
         let nuevoUsuarioValidado = new Usuario(documento, nombre, apellido, usuario, contraseña, tipoUsuario);
         usuarios.push(nuevoUsuarioValidado);
         document.querySelector("#ingresar_documento_persona").value = "";
@@ -376,8 +375,8 @@ function registroPersonas() {
         document.querySelector("#opciones_de_registro").value = "";
         document.querySelector("#comunicador_Registro").innerHTML = "El registro fue correcto"
     } else {
-        console.log("hay un error buscalo")
-        document.querySelector("#comunicador_Registro").innerHTML = "El registro NO fue correcto"
+
+        document.querySelector("#comunicador_Registro").innerHTML = "El registro NO fue correcto debe llenar todos los campos o cambiar el nombre de usuario"
     }
     console.log(usuarios)
     document.querySelector("#div_Registro_Persona").style.display = "none";
@@ -468,7 +467,7 @@ function registroEmpresas() {
     let contraseniaValidada = validarContrasenia(contraseña);
     let vehiculo = document.querySelector("#vehiculo_Registro").value;
     let estado = false;
-    if (usuarioValido == false && contraseniaValidada == true && contraseña.length > 5) {
+    if (usuarioValido == false && contraseniaValidada == true && contraseña.length > 5 && documento != "" && nombre != "" && apellido != "" && vehiculo != "") {
         let nuevoUsuarioValidado = new Usuario(documento, nombre, apellido, usuario, contraseña, tipoUsuario, vehiculo, estado);
         usuarios.push(nuevoUsuarioValidado);
 
@@ -480,8 +479,8 @@ function registroEmpresas() {
         document.querySelector("#opciones_de_registro").value = "";
         document.querySelector("#comunicador_Registro").innerHTML = "El registro fue correcto en breve nos comunicaremos para darle el alta de usuario"
     } else {
-        console.log("hay un error buscalo")
-        document.querySelector("#comunicador_Registro").innerHTML = "El registro NO fue correcto"
+
+        document.querySelector("#comunicador_Registro").innerHTML = "El registro NO fue correcto debe llenar todos los campos"
     }
     console.log(usuarios)
     document.querySelector("#div_Registro_Empresa").style.display = "none";
@@ -561,7 +560,51 @@ function cambiarEstadoUsuario(usuario) {
 function eventosclickInterfazAdministrador() {
 
     document.querySelector("#agregar_vehiculo").addEventListener("click", obtenerVehiculo);
+    document.querySelector("#btnBuscarEmpresas").addEventListener("click", botonBuscarEmpresas);
 }
+//funcion para buscar empresas 
+
+
+function botonBuscarEmpresas() {
+    let empresaBuscada = document.querySelector("#buscador_de_empresas").value.trim().toLowerCase();
+    let matchearEmpresa = buscarEmpresa(empresaBuscada);
+    let mensaje = ``;
+    if (empresaBuscada == matchearEmpresa.nombreRAZONsocial && matchearEmpresa.tipoUsuario == "opcion_Empresa") {
+        mensaje = `
+            Usuario: ${matchearEmpresa.usuario}.<br>
+            Contraseña: ${matchearEmpresa.contraseña}.<br>
+            Razon Social ${matchearEmpresa.nombreRAZONsocial}.<br>
+            Nombre Fantasía: ${matchearEmpresa.apellidoFANTASIA}.<br>
+            Tipo de Usuario: ${matchearEmpresa.tipoUsuario}.<br>
+            Habilitación: ${matchearEmpresa.habilitacion}.<br>
+            `;
+    } else {
+        mensaje = "La empresa no fue encontrada.";
+    }
+
+    document.querySelector("#BuscadorEmpresas").innerHTML = mensaje;
+}
+// funcion para buscar empresa
+function buscarEmpresa(empresaBuscada) {
+    let matcheo = false;
+    let reciboUsuarios = []
+    let i = 0;
+
+    while (i < usuarios.length && !matcheo) {
+        reciboUsuarios = usuarios[i];
+        let reciboNombre = reciboUsuarios.nombreRAZONsocial;
+        if (reciboNombre == empresaBuscada) {
+            matcheo = true;
+
+        }
+
+        i++;
+    }
+    console.log(reciboUsuarios)
+    return reciboUsuarios
+}
+
+
 
 //funcion para eventos de click interfaz persona
 function eventosclickInterfazPersona() {
@@ -608,7 +651,7 @@ function encontrarApellidoUsuario(usuario) {
         reciboArray = usuarios[i];
         reciboUsuario = reciboArray.usuario;
         apellido = reciboArray.apellidoFANTASIA
-        if (reciboUsuario == usuario) {
+        if (reciboUsuario == usuario ) {
             matcheo = true;
         }
         i++
@@ -628,6 +671,7 @@ function mostrarEnviosPendientes() {
     for (let i = 0; i < envios.length; i++) {
         let reciboEnvios = envios[i];
         let empresaDelEnvio = reciboEnvios.empresa;
+        console.log(empresaDelEnvio)
         let reciboNombre = reciboEnvios.nombre;
         console.log(reciboNombre)
         let reciboApellido = reciboEnvios.apellido
@@ -638,7 +682,8 @@ function mostrarEnviosPendientes() {
         let id = reciboEnvios.id;
         let letraParaBotonEstado = cambiarTextoBtnEstado(reciboEstado);
 
-
+        console.log(empresaDelEnvio)
+        console.log(usuario)
         if (vehiculo == obtenerVehiculoUsuarioEmpresa && reciboEstado == "Pendiente") {
             mostrarTablaPendientes += `<tr><td>${reciboNombre}</td>
                               <td>${reciboApellido}</td>
@@ -649,7 +694,8 @@ function mostrarEnviosPendientes() {
                         </tr>`;
 
         } else if (vehiculo == obtenerVehiculoUsuarioEmpresa && reciboEstado == "En transito" && usuario == empresaDelEnvio) {
-            mostrarTablaPedidosEnTransito += `<tr><td>${reciboNombre}</td>
+            console.log("entre al else if")
+            mostrarTablaPedidosEnTransito += `<tr><td>${reciboNombre}</td> 
             <td>${reciboApellido}</td>
            <td>${distancia}</td>
            <td>${foto}</td>
@@ -685,7 +731,8 @@ function mostrarEnviosPersona() {
         let reciboEnvios = envios[i];
         let reciboUsuario = reciboEnvios.usuario
         let reciboEmpresa = reciboEnvios.empresa;
-        let nombreFantasia = encontrarApellidoUsuario(reciboEmpresa);
+        console.log(reciboEmpresa)
+        let nombreFantasiaEmpresa = encontrarApellidoUsuario(reciboEmpresa) //encontrarNombreFantasiaempresa(reciboEmpresa);
         let reciboEstado = reciboEnvios.estado;
         let foto = reciboEnvios.foto;
         let letraParaBotonEstado = cambiarTextoBtnEstado(reciboEstado);
@@ -694,22 +741,41 @@ function mostrarEnviosPersona() {
         if (usuario == reciboUsuario) {
             mostrarTablaPedidosDePersona += `<tr><td>${foto}</td>
                               <td>${letraParaBotonEstado}</td>
-                             <td>${nombreFantasia}</td>
+                             <td>${nombreFantasiaEmpresa}</td>
                         </tr>`;
 
         }
     }
     document.querySelector("#tabla_Envios_Persona").innerHTML = mostrarTablaPedidosDePersona;
 }
+// funcion para encontrar nombre de fanatasia de una empresa
+function encontrarNombreFantasiaempresa(empresa) {
+    let nombrefantasia = "";
+    let matcheo = false;
+    let i = 0;
+    while (!matcheo && i < usuarios.length) {
+        let reciboUsuario = usuarios[i];
+        let reciboEmpresa = reciboUsuario.empresa;
+        let reciboNombreFantasia = reciboUsuario.apellidoFANTASIA;
 
+        if (empresa == reciboEmpresa) {
+            matcheo = true;
+            nombrefantasia = reciboNombreFantasia;
+        }
+        i++
+    }
+    console.log(nombrefantasia)
+    return nombrefantasia
+}
 // funcion eventos de click cambiar de en transito a finalizado
-function btnFUNCCambiarEstadoPedidoTransito() { 
-     
+function btnFUNCCambiarEstadoPedidoTransito() {
+
     let cambiarEstado = this.getAttribute("estadoPedidoFinalizar");
     let obtengoEnvioParaCambiar = obtenerPedido(cambiarEstado);
     let envioenTransito = finalizarPedidoYA(obtengoEnvioParaCambiar);
     cambiarEstadoFinalizar(envioenTransito)
-    
+    personaMasEnviosRealizados()
+
 }
 // funcion para cambiar texto boton estado
 function cambiarTextoBtnEstado(reciboEstado) {
@@ -729,10 +795,11 @@ function btnFUNCCambiarEstadoPedido() {
     let asignarsePedido = this.getAttribute("estadoPedido"); // saber que boton clickea
     let obtengoEnvioParaCambiar = obtenerPedido(asignarsePedido); //obtener el pedido
     let envioenTransito = finalizarPedidoYA(obtengoEnvioParaCambiar);
+    mostrarEnviosPendientes();
     personaMasEnviosRealizados()
     // mostrarEnviosEnTransitoTomados();
 
-    mostrarEnviosPendientes(); // actualizo la tabla de pedidos
+    // actualizo la tabla de pedidos
 }
 
 //funcion para finalizar pedido
@@ -744,25 +811,29 @@ function finalizarPedidoYA(elenvio) {
 
     } else if (envioEstado == "En Transito") {
         elenvio.estado = "Finalizado";
-        
-    
+
+
     }
     mostrarEnviosPendientes()
-    
+
     console.log(envios)
     return elenvio
 }
 // funcion para cambiar estado del pedido a finalizar
 function cambiarEstadoFinalizar(elenvio) {
+    let paraRetorno = true;
     let envioEstado = elenvio.estado
     if (envioEstado == "En transito") {
         elenvio.estado = "Finalizado";
         elenvio.empresa = document.querySelector("#ingresar_Usuario").value.trim().toLowerCase();
-       
-        
+        enviosFinalizados.push(elenvio)
+        console.log(elenvio)
     }
+
+    personaMasEnviosRealizados()
     mostrarEnviosPendientes()
     console.log(envios)
+    return paraRetorno
 }
 //funcion para obtener pedido cambio estado 
 function obtenerPedido(idPedido) {
@@ -803,13 +874,13 @@ function obtenerVehiculoEmpresa(usuario) {
 // funcion para estadisticas Interfaz empresa
 function personaMasEnviosRealizados() {
     let usuario = document.querySelector("#ingresar_Usuario").value.trim().toLowerCase();
-    
+
     let pedidosDEempresa = pedidosFinalizadosxEMP(usuario);
-    
+
     let personas = encontrarRemitentes(pedidosDEempresa);
-    
+
     let mejorCliente = encontrarMejorCliente(usuario, pedidosDEempresa, personas);
-    
+
     document.querySelector("#cantidad_envios").innerHTML = "el mejor cliente es " + mejorCliente
 
 }
@@ -892,7 +963,7 @@ function leerArrayNumPedidos(arrayClientes, cliente) {
 
         i++;
 
-    } 
+    }
     console.log(resultado)
     return resultado
 }
@@ -925,4 +996,44 @@ function encontrarRemitentes(pedidos) {
     }
 
     return remitentes
+}
+// funcion para mostrar estadisticas
+function muestroEstadisticasEmpresa() {
+    let estadoEstadistica = document.querySelector("#estadisticas_Estado_pedidios").value;
+    let empresa = document.querySelector("#ingresar_Usuario").value.trim().toLowerCase();
+    let resultado = "";
+    if (estadoEstadistica == "cantidad_Finalizados") {
+        resultado = cuentaPedidosFinalizados(empresa)
+    } else if (estadoEstadistica == "cantidad_En_transito") {
+        resultado = cuentaPedidosEnTRANS(empresa)
+
+    }
+    document.querySelector("#muestro_Estadisticas").innerHTML = "La cantidad de pedidos en ese estado es: " + resultado
+
+}
+// funcion cuentapedios finalizados
+function cuentaPedidosFinalizados(empresa) {
+    let cuentaPedidosFIN = 0;
+    for (let i = 0; i < envios.length; i++) {
+        let reciboEnvios = envios[i];
+        let reciboEmpresa = reciboEnvios.empresa;
+        let reciboEstado = reciboEnvios.estado;
+        if (reciboEstado == "Finalizado" && empresa == reciboEmpresa) {
+            cuentaPedidosFIN++;
+        }
+    }
+    return cuentaPedidosFIN
+}
+// funcion cuenta pedidos en transito
+function cuentaPedidosEnTRANS(empresa) {
+    let cuentaPedidosTRANS = 0;
+    for (let i = 0; i < envios.length; i++) {
+        let reciboEnvios = envios[i];
+        let reciboEmpresa = reciboEnvios.empresa;
+        let reciboEstado = reciboEnvios.estado;
+        if (reciboEstado == "En transito" && reciboEmpresa == empresa) {
+            cuentaPedidosTRANS++;
+        }
+    }
+    return cuentaPedidosTRANS
 }

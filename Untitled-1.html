@@ -58,7 +58,7 @@
                 </select>
                 <input type="button" value="Seleccionar" id="tipo_de_Registro">
                 <p id="comunicador_Registro"></p>
-                
+
             </div>
             <!- Fnc6 - Registro en la aplicación - Persona / Empresa. -–>
                 <div id="div_Registro_Persona">
@@ -75,7 +75,7 @@
                     <label for="password_persona_registro">Contraseña:</label>
                     <input type="password" id="password_persona_registro"><br><br>
                     <input type="button" value="Ingresar Datos" id="ingreso_datos_registroPERS">
-                    
+
                 </div>
                 <hr>
                 <div id="div_Registro_Empresa">
@@ -93,11 +93,11 @@
                     <input type="password" id="password_Empresa_registro"><br><br>
                     <label for="vehiculo_Registro">Ingrese tipo de vehiculo</label>
                     <select name="tipo_vehiculo" id="vehiculo_Registro">
-                      
+
                     </select>
                     <br><br>
                     <input type="button" value="Ingresar Datos" id="ingreso_datos_registroEMP"><br><br>
-                    
+
 
                 </div>
 
@@ -128,29 +128,33 @@
                     <!-- Fnc2 - Habilitar y deshabilitar empresas - Administrador -->
 
 
-                    Fnc3 - Filtro empresas – Administrador.-->
+                    <!-- Fnc3 - Filtro empresas – Administrador.-->
                     <form action="../../form-result.php" method="post" target="_blank">
 
                         <p>
 
-                            Buscar empresa: <input type="search" name="busqueda_Empresa" size="4" maxlength="4">
+                            Buscar empresa:
 
                             <input type="text" value="Buscar" id="buscador_de_empresas">
-
+                            <br><br>
+                            <input type="button" value="Buscar" id="btnBuscarEmpresas">
+                            <p id="BuscadorEmpresas"></p>
                         </p>
 
                     </form>
 
                     <!-- Fnc4 - Crear tipo de vehículos – Administrador.-->
                     <h4>Tipo de Vehiculos</h4>
-                    <p ><ol id="mostrar_vehiculos"></ol></p>
-                   
+                    <p>
+                        <ol id="mostrar_vehiculos"></ol>
+                    </p>
+
                     <input type="text" id="agregar_tipo_vehiculo" placeholder="agregar tipo de vehiculo">
                     <button id="agregar_vehiculo" aria-placeholder="agregar vehiculo"></button>
                     <!--.Fnc5 - Visualizar estadísticas sobre kilómetros recorridos según empresa- Administrador. -->
                     <br>
                     <hr>
-                    <table>"<br>"
+                    <table>
                         <thead>
                             <tr>
                                 <th>Empresa</th>
@@ -172,12 +176,20 @@
             <h2>Persona</h2>
             <label for="vehiculo">Seleccione el vehiculo de entrega </label>
             <select id="select_vehiculos" name="vehiculo">
-                
+
             </select>
             <br>
-            <label for="ingresar_km">Ingrese cantidad de km</label>
+            <label for="ingresar_km">Ingrese cantidad de km</label><br>
+            <label for="opciones_de_fotos_envios">Imagen</label><br>
+            <select name="opciones_de_fotos_envios" id="opciones_de_fotos_envios">
+                <option value= "S"> Seleccione una opción </option>
+                <option value= "P"> Pequeño </option>
+                <option value="M"> Mediano </option>
+                <option value="G"> Grande </option>
+            </select><br><br>
             <input type="number" id="ingresar_km"><br>
-            <p> <textarea name="comentario" id="agregar_foto" placeholder="arrastre su foto hasta aqui"></textarea></p>
+            <!--- <img src = "img/${imagen"}> --->
+        
             <input type="button" id="cargar_Envio" value="Enviar"><br>
             <p id="respuesta_envio"></p>
 
@@ -191,13 +203,14 @@
                         <th>Foto</th>
                         <th>Estado</th>
                         <th>Empresa</th>
-                    
+
                     </tr>
                 </thead>
                 <tbody id="tabla_Envios_Persona"></tbody>
             </table>
-
+            <h3>Estadisticas</h3>
             <!--Fnc9 - Visualizar estadísticas de solicitudes de envíos "En tránsito" o "Finalizada" Persona -->
+
             <p id="porcentaje_envios_asignados"> </p>
             <p id="estados_envios_existentes"> </p>
 
@@ -207,42 +220,51 @@
     <div id="interfaz_Empresa">
         <h2>Empresa</h2>
         <h5>Listado de pedidos pendientes</h5>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Nombre</th>
-                        <th>Apellido</th>
-                        <th>Distancia</th>
-                        <th>Foto</th>
-                        <th>Estado</th>
-                        <th>Asignar</th>
-                    </tr>
-                </thead>
-                <tbody id="tabla_Envios_Pendientes"></tbody>
-            </table>
-            <br>
-        
+        <table>
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th>Distancia</th>
+                    <th>Foto</th>
+                    <th>Estado</th>
+                    <th>Asignar</th>
+                </tr>
+            </thead>
+            <tbody id="tabla_Envios_Pendientes"></tbody>
+        </table>
+        <br>
+
 
         <!-- Fnc11 - Solicitudes "En tránsito" señalarlas como "Finalizadas" - Empresa -->
-<h5>Listado de pedidos en transito</h5>
+        <h5>Listado de pedidos en transito</h5>
 
-<table>
-    <thead>
-        <tr>
-            <th>Nombre</th>
-            <th>Apellido</th>
-            <th>Distancia</th>
-            <th>Foto</th>
-            <th>Estado</th>
-            <th>Finalizar</th>
-        </tr>
-    </thead>
-    <tbody id="tabla_Envios_En_Transito"></tbody>
-</table>
-<br>
-<br>
-            <p id="cantidad_envios"> </p>
-        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th>Distancia</th>
+                    <th>Foto</th>
+                    <th>Estado</th>
+                    <th>Finalizar</th>
+                </tr>
+            </thead>
+            <tbody id="tabla_Envios_En_Transito"></tbody>
+        </table>
+        <br>
+        <br>
+        <h3>Estadisticas</h3>
+
+        <label for="estadisticas_Estado_pedidios">Porcentaje envios</label>
+        <select name="estadisticas" id="estadisticas_Estado_pedidios">
+            <option value="cantidad_Finalizados">Finalizados</option>
+            <option value="cantidad_En_transito">En transito</option>
+        </select><br><br>
+        <input type="button" id="mostrar_estadisticas" value="Mostrar estadisticas"><br>
+        <p id="cantidad_envios"> </p>
+        <p id="muestro_Estadisticas"></p>
+    </div>
     </div>
     </div>
     </div>
