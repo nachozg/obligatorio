@@ -120,13 +120,14 @@ function botonCerrarSesion() {
     document.querySelector("#interfaz_Empresa").style.display = "none";
     document.querySelector("#ingresar_Usuario").value = "";
     document.querySelector("#comunicaion_Logueo").value = "";
+    document.querySelector("#comunicador_Registro").innerHTML = "";
 }
 //funcion para los eventos de click en la pagina de registro
 function eventosClickRegistro() {
     document.querySelector("#tipo_de_Registro").addEventListener("click", opcionPaginasRegistro);
     document.querySelector("#ingreso_datos_registroPERS").addEventListener("click", registroPersonas);
     document.querySelector("#ingreso_datos_registroEMP").addEventListener("click", registroEmpresas);
-
+    console.log(usuarios)
 }
 // funcion para eventos de click en ingresar
 function eventosClickIngresar() {
@@ -139,6 +140,7 @@ function logueo() {
     mostrarEnviosPendientes();
     mostrarKMporEmpresa();
     personaMasEnviosRealizados();
+    estadisticasPersonasEnvios()
     let usuario = document.querySelector("#ingresar_Usuario").value.trim();
     usuario = usuario.toLowerCase()
     let contrasenia = document.querySelector("#password_usuario").value;
@@ -356,6 +358,7 @@ function botonRegistrarse() {
 function registroPersonas() {
 
     let documento = document.querySelector("#ingresar_documento_persona").value;
+    let validoDocumento = funcValidoDocumento(documento);
     let nombre = document.querySelector("#registro_persona_nombre").value;
     let apellido = document.querySelector("#registro_persona_apellido").value;
     let usuario = document.querySelector("#registro_persona_usuario").value.trim();
@@ -364,7 +367,7 @@ function registroPersonas() {
     let tipoUsuario = document.querySelector("#opciones_de_registro").value;
     let usuarioValido = validarUsuario(usuario); // si devuelve true pusheo todo
     let contraseniaValidada = validarContrasenia(contraseña);
-    if (usuarioValido == false && contraseniaValidada == true && contraseña.length > 5 && documento != "" && nombre != "" && apellido != "") {
+    if (usuarioValido == false && contraseniaValidada == true && contraseña.length > 5 && validoDocumento == true && nombre != "" && apellido != "") {
         let nuevoUsuarioValidado = new Usuario(documento, nombre, apellido, usuario, contraseña, tipoUsuario);
         usuarios.push(nuevoUsuarioValidado);
         document.querySelector("#ingresar_documento_persona").value = "";
@@ -453,11 +456,50 @@ function cuentaNumeros(texto) {
     console.log(cuentaNum)
     return cuentaNum
 }
+//funcion para validar rut o documento
+function funcValidoDocumento(documento) {
+    let matcheo = false;
+    let valido = true;
+    let i = 0;
+
+    while (!matcheo && i < usuarios.length) {
+        let reciboUsuario = usuarios[i];
+        console.log(reciboUsuario)
+        let reciboDocumento = reciboUsuario.documentoRUT;
+        if (reciboDocumento == documento) {
+            matcheo = true;
+            valido = false;
+            console.log("entrealif")
+        }
+
+        i++
+    }
+    return valido
+}
+// funcion para validar nombre o razon social
+function funcValidoNombre(nombre) {
+    let matcheo = false;
+    let valido = true;
+    let i = 0;
+
+    while (!matcheo && i < usuarios.length) {
+        let reciboUsuario = usuarios[i];
+        let reciboNombre = reciboUsuario.nombreRAZONsocial;
+        if (reciboNombre == nombre) {
+            matcheo = true;
+            valido = false;
+        }
+        i++
+    }
+    return valido
+}
 // funcion para registrar empresas
 function registroEmpresas() {
 
     let documento = document.querySelector("#ingresar_Rut_Empresa").value;
-    let nombre = document.querySelector("#registro_Razon_Social").value;
+    let validoDocumento = funcValidoDocumento(documento);
+    let nombre = document.querySelector("#registro_Razon_Social").value.trim().toLowerCase();
+    let validoNombre = funcValidoNombre(nombre);
     let apellido = document.querySelector("#registro_Nombre_Fantasia").value;
     let usuario = document.querySelector("#registro_Empresa_usuario").value.trim();
     usuario = usuario.toLowerCase();
@@ -467,11 +509,11 @@ function registroEmpresas() {
     let contraseniaValidada = validarContrasenia(contraseña);
     let vehiculo = document.querySelector("#vehiculo_Registro").value;
     let estado = false;
-    if (usuarioValido == false && contraseniaValidada == true && contraseña.length > 5 && documento != "" && nombre != "" && apellido != "" && vehiculo != "") {
+    if (usuarioValido == false && contraseniaValidada == true && contraseña.length > 5 && validoDocumento == true && validoNombre == true && apellido != "" && vehiculo != "") {
         let nuevoUsuarioValidado = new Usuario(documento, nombre, apellido, usuario, contraseña, tipoUsuario, vehiculo, estado);
         usuarios.push(nuevoUsuarioValidado);
 
-        documento = document.querySelector("#ingresar_Rut_Empresa").value = "";
+        document.querySelector("#ingresar_Rut_Empresa").value = "";
         document.querySelector("#registro_Razon_Social").value = "";
         document.querySelector("#registro_Nombre_Fantasia").value = "";
         document.querySelector("#registro_Empresa_usuario").value = "";
@@ -578,7 +620,7 @@ function botonBuscarEmpresas() {
             Tipo de Usuario: ${matchearEmpresa.tipoUsuario}.<br>
             Habilitación: ${matchearEmpresa.habilitacion}.<br>
             `;
-    } else {
+    }else {
         mensaje = "La empresa no fue encontrada.";
     }
 
@@ -593,6 +635,7 @@ function buscarEmpresa(empresaBuscada) {
     while (i < usuarios.length && !matcheo) {
         reciboUsuarios = usuarios[i];
         let reciboNombre = reciboUsuarios.nombreRAZONsocial;
+        let reciboFantasia = reciboUsuarios.apellidoFANTASIA;
         if (reciboNombre == empresaBuscada) {
             matcheo = true;
 
@@ -609,6 +652,7 @@ function buscarEmpresa(empresaBuscada) {
 //funcion para eventos de click interfaz persona
 function eventosclickInterfazPersona() {
     document.querySelector("#cargar_Envio").addEventListener("click", completarEnvio);
+    document.querySelector("#mostrar_X_Estado").addEventListener("click", estadisticasPersonasEnvios);
 
 }
 // funcion para subir envios al array
@@ -617,11 +661,17 @@ function completarEnvio() {
     let vehiculo = document.querySelector("#select_vehiculos").value;
     let distancia = parseInt(document.querySelector("#ingresar_km").value);
     let estado = "Pendiente"
-    let foto = "";
+    let foto = document.querySelector("#opciones_de_fotos_envios").value;
     let nombre = encontrarNombreUsuario(usuario);
     let apellido = encontrarApellidoUsuario(usuario);
-    subirEnvios(usuario, vehiculo, distancia, foto, estado, "", nombre, apellido);
-    console.log(envios)
+    if (vehiculo != "" && !isNaN(distancia) && distancia > 0) {
+        subirEnvios(usuario, vehiculo, distancia, foto, estado, "", nombre, apellido);
+        document.querySelector("#respuesta_envio").innerHTML = "El pedido esta siendo procesado"
+        console.log(envios)
+    } else {
+        document.querySelector("#respuesta_envio").innerHTML = "Todos los campos son obligatorios y la distancia debe ser mayor a 0"
+    }
+    estadisticasPersonasEnvios()
     mostrarEnviosPersona()
 
 
@@ -651,7 +701,7 @@ function encontrarApellidoUsuario(usuario) {
         reciboArray = usuarios[i];
         reciboUsuario = reciboArray.usuario;
         apellido = reciboArray.apellidoFANTASIA
-        if (reciboUsuario == usuario ) {
+        if (reciboUsuario == usuario) {
             matcheo = true;
         }
         i++
@@ -1036,4 +1086,70 @@ function cuentaPedidosEnTRANS(empresa) {
         }
     }
     return cuentaPedidosTRANS
+}
+//funcion para ver estadisticas en interfaz persona
+function estadisticasPersonasEnvios() {
+    let usuario = document.querySelector("#ingresar_Usuario").value.trim().toLowerCase();
+    let resultado = "";
+    
+    let estadoEnvio = document.querySelector("#estadisticas_Persona").value;
+    if (estadoEnvio == "pendientes") {
+        resultado = cuentaPedidosPendientes(usuario);
+    } else if (estadoEnvio == "transito") {
+        resultado = cuentaPedidosEnTRANSpersonas(usuario);
+
+    } else if (estadoEnvio == "finalizada") {
+        resultado = cuentaPedidosFINpersona(usuario);
+    }
+    let porcentajeEnvios = porcentajeEnviosTomados(usuario)
+    document.querySelector("#porcentaje_envios_asignados").innerHTML = "Elporcentaje de envios tomados es: " + porcentajeEnvios;
+    document.querySelector("#estados_envios_existentes").innerHTML = "La cantidad de pedidos en ese estado es: " + resultado;
+}
+// funcion para contar pedidos pendientes por usuario
+function cuentaPedidosPendientes(usuario) {
+    let cuentaPedidosPendientes = 0;
+    for (let i = 0; i < envios.length; i++) {
+        let reciboEnvios = envios[i];
+        let reciboUsuario = reciboEnvios.usuario;
+        let reciboEstado = reciboEnvios.estado;
+        if (reciboEstado == "Pendiente" && reciboUsuario == usuario) {
+            cuentaPedidosPendientes++;
+        }
+    }
+    console.log(cuentaPedidosPendientes)
+    return cuentaPedidosPendientes
+}
+//funcion para contar pedidos en transito por persona
+function cuentaPedidosEnTRANSpersonas(usuario) {
+    let cuentaPedidosTRANS = 0;
+    for (let i = 0; i < envios.length; i++) {
+        let reciboEnvios = envios[i];
+        let reciboUsuario = reciboEnvios.usuario;
+        let reciboEstado = reciboEnvios.estado;
+        if (reciboEstado == "En transito" && reciboUsuario == usuario) {
+            cuentaPedidosTRANS++;
+        }
+    }
+    return cuentaPedidosTRANS
+}
+// funcion para contar pedidos finalizados por persona
+function cuentaPedidosFINpersona(usuario) {
+    let cuentaPedidosFIN = 0;
+    for (let i = 0; i < envios.length; i++) {
+        let reciboEnvios = envios[i];
+        let reciboUsuario = reciboEnvios.usuario;
+        let reciboEstado = reciboEnvios.estado;
+        if (reciboEstado == "Finalizado" && reciboUsuario == usuario) {
+            cuentaPedidosFIN++;
+        }
+    }
+    return cuentaPedidosFIN
+}
+//funcion para mostrar porcentaje de envios tomadas por alguna empresa de un usuario persona
+function porcentajeEnviosTomados(usuario) {
+    let porcentaje = 0;
+    let totalenvios = cuentaPedidosEnTRANSpersonas(usuario) + cuentaPedidosFINpersona(usuario) + cuentaPedidosPendientes(usuario);
+    let totaltomados = cuentaPedidosEnTRANSpersonas(usuario) + cuentaPedidosFINpersona(usuario);
+     porcentaje = totaltomados *100 /totalenvios
+     return porcentaje
 }

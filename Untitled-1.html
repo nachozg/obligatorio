@@ -81,8 +81,9 @@
                 <div id="div_Registro_Empresa">
 
                     <h2>Registro de Empresas</h2>
+                    <p>Todos los campos son obligatorios para el registro</p>
                     <label for="ingresar_Rut_Empresa">Ingrese Rut</label>
-                    <input type="text" id="ingresar_Rut_Empresa"><br><br>
+                    <input type="number" id="ingresar_Rut_Empresa" placeholder="Ingrese solo Numeros"><br><br>
                     <label for="registro_Razon_Social">Ingrese Razon social</label>
                     <input type="text" id="registro_Razon_Social"><br><br>
                     <label for="registro_Nombre_Fantasia">Ingrese Nombre de fantasia</label>
@@ -93,7 +94,6 @@
                     <input type="password" id="password_Empresa_registro"><br><br>
                     <label for="vehiculo_Registro">Ingrese tipo de vehiculo</label>
                     <select name="tipo_vehiculo" id="vehiculo_Registro">
-
                     </select>
                     <br><br>
                     <input type="button" value="Ingresar Datos" id="ingreso_datos_registroEMP"><br><br>
@@ -180,16 +180,17 @@
             </select>
             <br>
             <label for="ingresar_km">Ingrese cantidad de km</label><br>
-            <label for="opciones_de_fotos_envios">Imagen</label><br>
+            <input type="number" id="ingresar_km"><br><br>
+            <label for="opciones_de_fotos_envios">Seleccione una imagen</label><br>
             <select name="opciones_de_fotos_envios" id="opciones_de_fotos_envios">
-                <option value= "S"> Seleccione una opción </option>
-                <option value= "P"> Pequeño </option>
+                <option value="S"> Seleccione una opción </option>
+                <option value="P"> Pequeño </option>
                 <option value="M"> Mediano </option>
                 <option value="G"> Grande </option>
             </select><br><br>
-            <input type="number" id="ingresar_km"><br>
+
             <!--- <img src = "img/${imagen"}> --->
-        
+
             <input type="button" id="cargar_Envio" value="Enviar"><br>
             <p id="respuesta_envio"></p>
 
@@ -210,8 +211,14 @@
             </table>
             <h3>Estadisticas</h3>
             <!--Fnc9 - Visualizar estadísticas de solicitudes de envíos "En tránsito" o "Finalizada" Persona -->
-
-            <p id="porcentaje_envios_asignados"> </p>
+            <p id="porcentaje_envios_asignados"> </p><br>
+            <label for="estadisticas_Persona">Ingrese el estado del pedido</label>
+            <select name="estadisticas" id="estadisticas_Persona">
+                <option value="pendientes">Pendiente</option>
+                <option value="transito">En transito</option>
+                <option value="finalizada">Finalizado</option>
+            </select><br><br>
+            <input type="button" id="mostrar_X_Estado" value="Ver estadisticas"><br>
             <p id="estados_envios_existentes"> </p>
 
     </div>
