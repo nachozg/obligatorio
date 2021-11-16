@@ -631,7 +631,7 @@ function botonBuscarEmpresas() {
             Tipo de Usuario: ${nombreFantasiaBuscado.tipoUsuario}.<br>
             Habilitación: ${nombreFantasiaBuscado.habilitacion}.<br>
             Rut: ${nombreFantasiaBuscado.documentoRUT}.<br.
-       `
+       `;
     }else{
         mensaje = "La empresa no fue encontrada.";
     }
