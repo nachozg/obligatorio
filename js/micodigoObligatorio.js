@@ -610,6 +610,7 @@ function eventosclickInterfazAdministrador() {
 function botonBuscarEmpresas() {
     let empresaBuscada = document.querySelector("#buscador_de_empresas").value.trim().toLowerCase();
     let matchearEmpresa = buscarEmpresa(empresaBuscada);
+    let nombreFantasiaBuscado = encontrarNombreFantasiaempresa(empresaBuscada);
     let mensaje = ``;
     if (empresaBuscada == matchearEmpresa.nombreRAZONsocial && matchearEmpresa.tipoUsuario == "opcion_Empresa") {
         mensaje = `
@@ -619,8 +620,19 @@ function botonBuscarEmpresas() {
             Nombre Fantasía: ${matchearEmpresa.apellidoFANTASIA}.<br>
             Tipo de Usuario: ${matchearEmpresa.tipoUsuario}.<br>
             Habilitación: ${matchearEmpresa.habilitacion}.<br>
+            Rut: ${matchearEmpresa.documentoRUT}.<br.
             `;
-    }else {
+    }else if (empresaBuscada == nombreFantasiaBuscado.apellidoFANTASIA && nombreFantasiaBuscado.tipoUsuario == "opcion_Empresa") {
+       mensaje = `
+       Usuario: ${nombreFantasiaBuscado.usuario}.<br>
+            Contraseña: ${nombreFantasiaBuscado.contraseña}.<br>
+            Razon Social ${nombreFantasiaBuscado.nombreRAZONsocial}.<br>
+            Nombre Fantasía: ${nombreFantasiaBuscado.apellidoFANTASIA}.<br>
+            Tipo de Usuario: ${nombreFantasiaBuscado.tipoUsuario}.<br>
+            Habilitación: ${nombreFantasiaBuscado.habilitacion}.<br>
+            Rut: ${nombreFantasiaBuscado.documentoRUT}.<br.
+       `
+    }else{
         mensaje = "La empresa no fue encontrada.";
     }
 
@@ -800,22 +812,23 @@ function mostrarEnviosPersona() {
 }
 // funcion para encontrar nombre de fanatasia de una empresa
 function encontrarNombreFantasiaempresa(empresa) {
-    let nombrefantasia = "";
+   
+    let reciboUsuario = ``;
     let matcheo = false;
     let i = 0;
     while (!matcheo && i < usuarios.length) {
-        let reciboUsuario = usuarios[i];
+         reciboUsuario = usuarios[i];
         let reciboEmpresa = reciboUsuario.empresa;
         let reciboNombreFantasia = reciboUsuario.apellidoFANTASIA;
 
-        if (empresa == reciboEmpresa) {
+        if (empresa == reciboNombreFantasia) {
             matcheo = true;
-            nombrefantasia = reciboNombreFantasia;
+            
         }
         i++
     }
-    console.log(nombrefantasia)
-    return nombrefantasia
+    console.log(reciboUsuario)
+    return reciboUsuario
 }
 // funcion eventos de click cambiar de en transito a finalizado
 function btnFUNCCambiarEstadoPedidoTransito() {
