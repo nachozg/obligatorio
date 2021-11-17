@@ -22,3 +22,6 @@ th , td {
         background-color: darkgray;
     
     }
+    .imagenUsuario {
+        max-width: 60px !important;
+      }

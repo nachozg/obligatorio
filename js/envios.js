@@ -5,7 +5,7 @@ class Envios {
         this.vehiculo = pVehiculo;
         this.empresa = pEmpresa;
         this.distancia = pDistancia;
-        this.foto = pFoto;//Agregar foto al class
+        this.foto = pFoto;
         this.nombre = pNombre;
         this.apellido = pApellido;
         this.id = proximoEnvio;
@@ -18,21 +18,5 @@ class Envios {
             this.estado = "Pendiente";
         }
     }
-    
-    obtenerImagen(foto) {
-        let imagenParaDevolver = '';
-
-        if (this.imagen) {
-            imagenParaDevolver = this.imagen;
-        } else {
-            if (this.imagen == "P" ) {
-                imagenParaDevolver = 'pequenio.jpg';
-            } else if (this.imagen == "M") {
-                imagenParaDevolver = "mediano.jpg";
-            } else if (this.imagen == "G") {
-                imagenParaDevolver = "grande.png";
-            }
-        }
-        return imagenParaDevolver;
-    }
+   
 }
