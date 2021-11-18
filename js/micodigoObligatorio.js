@@ -7,7 +7,7 @@ let envios = [];
 let proximoEnvio = 1;
 let enviosFinalizados = [];
 Inicializar();
-
+// 
 function Inicializar() {
     agregarEventosDeClick();
     ocultarPantallas();
